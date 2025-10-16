@@ -17,16 +17,15 @@ jobs:
           POSTGRES_DB: accounting
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd=\"pg_isready -U acct_user -d accounting\"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install Postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
       - name: Install deps
         working-directory: backend
         run: |
@@ -36,7 +35,8 @@ jobs:
       - name: Wait for Postgres
         run: |
           for i in {1..30}; do
-            pg_isready -h localhost -U acct_user -d accounting && break
+            if pg_isready -h localhost -U acct_user -d accounting; then
+              echo "Postgres is ready"; break; fi
             sleep 2
           done
       - name: Run migrations
