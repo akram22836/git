@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# Alembic
+/backend/migrations/*.pyc
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Docker
+**/dist/
+**/.docker/
+**/.cache/
+
+# Flutter
+**/build/
+**/.dart_tool/
+**/.packages
+**/pubspec.lock
