@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Iterable
 
 from fastapi import HTTPException
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.models.accounting import JournalEntry, JournalLine
 
@@ -24,7 +24,7 @@ def post_entry(session: Session, entry: JournalEntry) -> JournalEntry:
         raise HTTPException(status_code=400, detail="Entry already posted")
 
     lines = session.exec(
-        session.query(JournalLine).filter(JournalLine.journal_entry_id == entry.id)
+        select(JournalLine).where(JournalLine.journal_entry_id == entry.id)
     ).all()
     validate_balanced(lines)
 

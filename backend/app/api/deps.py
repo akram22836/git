@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Generator
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
 from jose import JWTError, jwt
 
 from app.core.config import settings
@@ -21,7 +21,7 @@ def get_token_authorization_header(authorization: str | None) -> str:
     return token
 
 
-def get_current_user_id(authorization: Annotated[str | None, Depends()] = None) -> int:
+def get_current_user_id(authorization: Annotated[str | None, Header(alias="Authorization")] = None) -> int:
     token = get_token_authorization_header(authorization)
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
